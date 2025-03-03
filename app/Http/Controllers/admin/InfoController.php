@@ -19,12 +19,13 @@ class InfoController extends Controller
     {
         return view('admin.info.add');
     }
+
     public function insert(Request $request)
     {
         // Validate the request
         $request->validate([
             'name' => 'required',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,bmp,tiff,tif,webp,svg,heic,heif|max:20480',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,bmp,tiff,tif,webp,svg,heic,heif|max:51200', // 50MB
         ]);
 
         // Create a new instance of the model
@@ -34,15 +35,17 @@ class InfoController extends Controller
 
         // Handle the image upload
         if ($request->hasFile('image')) {
-            // Handle file upload
             $mainImage = $request->file('image');
-            $mainImageName = Str::random(10) . '.' . $mainImage->getClientOriginalExtension();
 
-            // Store the file in the 'public/images' directory
-            $path = $mainImage->storeAs('images', $mainImageName, 'public');
+            if ($mainImage->isValid()) {
+                $mainImageName = Str::random(10) . '.' . $mainImage->getClientOriginalExtension();
 
-            // Save the relative path to the model
-            $insert->image = $path;
+                // Store the file in 'storage/app/public/images'
+                $path = $mainImage->storeAs('images', $mainImageName, 'public');
+
+                // Save only the relative path so it works with the storage link
+                $insert->image = $path;
+            }
         }
 
         // Save the model to the database
@@ -51,6 +54,7 @@ class InfoController extends Controller
         // Redirect or return a response
         return redirect('admin/info/list')->with('success', 'Information added successfully');
     }
+
 
     public function edit($id)
     {

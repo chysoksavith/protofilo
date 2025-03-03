@@ -8,8 +8,7 @@
                     <a href="{{ url('admin/info/list') }}" class="btn btn-primary">Back</a>
                 </div>
                 <div class="card-body">
-                    <form id="project-form" action="{{ url('admin/info/add') }}" method="POST"
-                        enctype="multipart/form-data">
+                    <form id="project-form" action="{{ url('admin/info/add') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <!-- Other form fields -->
                         <div class="form-floating form-floating-outline mb-4">
@@ -17,7 +16,6 @@
                             <label for="name">Name </label>
                         </div>
                         <span style="color: red; font-size: 13px;">{{ $errors->first('name') }}</span>
-
 
                         <div class="form-floating form-floating-outline mb-4">
                             <textarea class="form-control h-px-100" name="description" placeholder="Comments here..." id="description"></textarea>
